@@ -1,0 +1,17 @@
+E:\Private\Translate\Translate\bin\Release\Translate.exe.config
+E:\Private\Translate\Translate\bin\Release\Translate.exe
+E:\Private\Translate\Translate\bin\Release\Translate.pdb
+E:\Private\Translate\Translate\bin\Release\Aspose.Cells.dll
+E:\Private\Translate\Translate\bin\Release\Aspose.Words.dll
+E:\Private\Translate\Translate\bin\Release\Newtonsoft.Json.dll
+E:\Private\Translate\Translate\bin\Release\RestSharp.dll
+E:\Private\Translate\Translate\bin\Release\Newtonsoft.Json.xml
+E:\Private\Translate\Translate\bin\Release\RestSharp.xml
+E:\Private\Translate\Translate\obj\Release\Translate.Form1.resources
+E:\Private\Translate\Translate\obj\Release\Translate.Properties.Resources.resources
+E:\Private\Translate\Translate\obj\Release\Translate.csproj.GenerateResource.cache
+E:\Private\Translate\Translate\obj\Release\Translate.csproj.CoreCompileInputs.cache
+E:\Private\Translate\Translate\obj\Release\Translate.csproj.CopyComplete
+E:\Private\Translate\Translate\obj\Release\Translate.exe
+E:\Private\Translate\Translate\obj\Release\Translate.pdb
+E:\Private\Translate\Translate\obj\Release\Translate.csprojAssemblyReference.cache

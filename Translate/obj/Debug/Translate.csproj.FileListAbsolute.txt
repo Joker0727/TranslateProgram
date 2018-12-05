@@ -11,7 +11,6 @@ C:\Users\16107\Desktop\Translate\Translate\obj\Debug\Translate.pdb
 E:\Private\Translate\Translate\bin\Debug\Translate.exe.config
 E:\Private\Translate\Translate\bin\Debug\Translate.exe
 E:\Private\Translate\Translate\bin\Debug\Translate.pdb
-E:\Private\Translate\Translate\obj\Debug\Translate.csprojAssemblyReference.cache
 E:\Private\Translate\Translate\obj\Debug\Translate.Form1.resources
 E:\Private\Translate\Translate\obj\Debug\Translate.Properties.Resources.resources
 E:\Private\Translate\Translate\obj\Debug\Translate.csproj.GenerateResource.cache
@@ -34,3 +33,5 @@ E:\My\Translate\Translate\obj\Debug\Translate.csproj.CopyComplete
 E:\My\Translate\Translate\obj\Debug\Translate.exe
 E:\My\Translate\Translate\obj\Debug\Translate.pdb
 E:\My\Translate\Translate\obj\Debug\Translate.csprojAssemblyReference.cache
+E:\Private\Translate\Translate\bin\Debug\RestSharp.dll
+E:\Private\Translate\Translate\bin\Debug\RestSharp.xml

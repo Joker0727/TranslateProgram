@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Aspose.Cells;
+using Aspose.Words;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -80,15 +82,15 @@ namespace Translate.Helper
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public string MD5Encrypt32(string password)
+        public string MD5Encrypt32(string str)
         {
-            if (password == null)
+            if (str == null)
             {
                 return null;
             }
             MD5 md5Hash = MD5.Create();
             //将输入字符串转换为字节数组并计算哈希数据  
-            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(str));
             //创建一个 Stringbuilder 来收集字节并创建字符串  
             StringBuilder sBuilder = new StringBuilder();
             //循环遍历哈希数据的每一个字节并格式化为十六进制字符串  
@@ -116,16 +118,19 @@ namespace Translate.Helper
         /// </summary>
         /// <param name="folder"></param>
         /// <returns></returns>
-        public Dictionary<string, string> ReadAllText(string folder)
+        public Dictionary<string, string> ReadAllFile(string folder)
         {
             Dictionary<string, string> textDic = new Dictionary<string, string>();
             DirectoryInfo root = new DirectoryInfo(folder);
+            string ext = string.Empty;
             foreach (FileInfo f in root.GetFiles())
             {
-                if (f.Extension.ToLower() == ".txt")
+                ext = f.Extension.ToLower();
+                if (ext == ".txt" || ext == ".doc" || ext == ".docx" || ext == ".xls" || ext == ".xlsx")
                 {
                     string fullName = f.FullName;
-                    textDic.Add(f.Name, f.FullName);
+                    if (!fullName.Contains("~$"))
+                        textDic.Add(f.Name, f.FullName);
                 }
             }
             return textDic;
@@ -140,7 +145,6 @@ namespace Translate.Helper
             string content = string.Empty;
             if (File.Exists(filePath))
                 content = File.ReadAllText(filePath, Encoding.Default);
-
             return GetUtf8String(content);
         }
         /// <summary>
@@ -157,7 +161,63 @@ namespace Translate.Helper
                 string fileFullPath = resulePath + fileName;
                 if (File.Exists(fileFullPath))
                     File.Delete(fileFullPath);
-                File.WriteAllText(fileFullPath, content, Encoding.Default);
+                File.WriteAllText(fileFullPath, content, Encoding.UTF8);
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex);
+            }
+            return isSuccess;
+        }
+        /// <summary>
+        /// 写入word
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public bool WriteWord(string fileName, string content)
+        {
+            bool isSuccess = false;
+            try
+            {
+                CheckFolderPath();
+                string fileFullPath = resulePath + fileName;
+                if (File.Exists(fileFullPath))
+                    File.Delete(fileFullPath);
+                Document doc = new Document();
+                DocumentBuilder builder = new DocumentBuilder(doc);
+                // Specify font formatting
+                //Aspose.Words.Font font = builder.Font;
+                //font.Size = 16;
+                //font.Bold = true;
+                //font.Color = System.Drawing.Color.Blue;
+                //font.Name = "Arial";
+                //font.Underline = Underline.Dash;
+                // Specify paragraph formatting
+                ParagraphFormat paragraphFormat = builder.ParagraphFormat;
+                paragraphFormat.FirstLineIndent = 8;
+                paragraphFormat.Alignment = ParagraphAlignment.Justify;
+                paragraphFormat.KeepTogether = true;
+                builder.Writeln(content);
+                doc.Save(fileFullPath);
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex);
+            }
+            return isSuccess;
+        }
+
+        public bool WriteExcel(string fileName, Workbook workbook)
+        {
+            bool isSuccess = false;
+            try
+            {
+                CheckFolderPath();
+                string fileFullPath = resulePath + fileName;
+                if (File.Exists(fileFullPath))
+                    File.Delete(fileFullPath);
+                workbook.Save(fileFullPath);
             }
             catch (Exception ex)
             {
@@ -181,33 +241,55 @@ namespace Translate.Helper
         {
             try
             {
-                string log = logObj.ToString();
-                string path = AppDomain.CurrentDomain.BaseDirectory + "log\\";//日志文件夹
-                DirectoryInfo dir = new DirectoryInfo(path);
-                if (!dir.Exists)//判断文件夹是否存在
-                    dir.Create();//不存在则创建
+                //string log = logObj.ToString();
+                //string path = AppDomain.CurrentDomain.BaseDirectory + "log\\";//日志文件夹
+                //DirectoryInfo dir = new DirectoryInfo(path);
+                //if (!dir.Exists)//判断文件夹是否存在
+                //    dir.Create();//不存在则创建
 
-                FileInfo[] subFiles = dir.GetFiles();//获取该文件夹下的所有文件
-                foreach (FileInfo f in subFiles)
-                {
-                    string fname = Path.GetFileNameWithoutExtension(f.FullName); //获取文件名，没有后缀a
-                    DateTime start = Convert.ToDateTime(fname);//文件名转换成时间
-                    DateTime end = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));//获取当前日期
-                    TimeSpan sp = end.Subtract(start);//计算时间差
-                    if (sp.Days > 30)//大于30天删除
-                        f.Delete();
-                }
+                //FileInfo[] subFiles = dir.GetFiles();//获取该文件夹下的所有文件
+                //foreach (FileInfo f in subFiles)
+                //{
+                //    string fname = Path.GetFileNameWithoutExtension(f.FullName); //获取文件名，没有后缀a
+                //    DateTime start = Convert.ToDateTime(fname);//文件名转换成时间
+                //    DateTime end = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));//获取当前日期
+                //    TimeSpan sp = end.Subtract(start);//计算时间差
+                //    if (sp.Days > 30)//大于30天删除
+                //        f.Delete();
+                //}
 
-                string logName = DateTime.Now.ToString("yyyy-MM-dd") + ".log";//日志文件名称，按照当天的日期命名
-                string fullPath = path + logName;//日志文件的完整路径
-                string contents = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " -> " + log + "\r\n";//日志内容
+                //string logName = DateTime.Now.ToString("yyyy-MM-dd") + ".log";//日志文件名称，按照当天的日期命名
+                //string fullPath = path + logName;//日志文件的完整路径
+                //string contents = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " -> " + log + "\r\n";//日志内容
 
-                File.AppendAllText(fullPath, contents, Encoding.UTF8);//追加日志
+                //File.AppendAllText(fullPath, contents, Encoding.UTF8);//追加日志
             }
             catch (Exception)
             {
                 throw;
             }
+        }
+        /// <summary>
+        /// 中文繁简互转
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public string StringConvert(string x, int type = 2)
+        {
+            String value = String.Empty;
+            switch (type)
+            {
+                case 1://转繁体
+                    value = Microsoft.VisualBasic.Strings.StrConv(x, Microsoft.VisualBasic.VbStrConv.TraditionalChinese, 0);
+                    break;
+                case 2://转简体
+                    value = Microsoft.VisualBasic.Strings.StrConv(x, Microsoft.VisualBasic.VbStrConv.SimplifiedChinese, 0);
+                    break;
+                default:
+                    break;
+            }
+            return value;
         }
     }
 }
